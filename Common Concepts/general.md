@@ -7,7 +7,8 @@ Sigmoid causes a Vanishing gradient problem.
 
 The sigmoid is the inverse of the logit function. Thus, the sigmoid of 1.098 is 0.75.
 Mathematically, the sigmoid is given by:
-σ (Y)  = 1 / 1 + e−Y
+
+$$\sigma(Y) = \frac{1}{1 + e^{-Y}}$$
 
 
 Relu helps in solving the above problem. 
