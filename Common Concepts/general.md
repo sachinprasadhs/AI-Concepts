@@ -71,7 +71,7 @@ Some of the most commonly used activation functions are.
 
 ## 6. Formulas for derivatives
 
-
+![Derivative Formula](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/derivative_formula.png)
 
 
 
