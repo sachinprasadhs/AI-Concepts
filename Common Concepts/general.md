@@ -1,6 +1,6 @@
 ## 1.Sigmoid vs Relu:
 
-	
+![Sigmoid vs Relu](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/Relu%20vs%20Sigmoid.png)
 
 Sigmoid causes a Vanishing gradient problem.
  Reason- The gradients(slope) near the boundary values( 0 and 1) are almost zero, which results in slower learning i.e weight updation.
@@ -32,10 +32,12 @@ Below cost function is used to make the graph convex which is easier to find glo
 
 Loss function is defined for 1 training example.
 
+![Loss function](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/loss%20function.png)
 
 
 Cost function is defined for the entire training set.
 
+![Cost Function](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/cost%20function.png)
 
 
 ## 4. Gradient Descent: 
@@ -45,9 +47,15 @@ The weights and bias will be updated based on the derivative of the cost functio
 
 Weights and bias will be updated with the new weights calculated by subtracting the existing weight with the product of learning rate and derivative of cost function wrt weight and similarly for bias. 
 
+![weights and bais update](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/weights%20and%20bias%20update.png)
+
+
+![Gradient Descent](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/gradient%20descent.png)
 
 
 ## 5. Activation Functions: 
+
+![Activation Functions](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/activation%20functions.png)
 
 Activation functions are used to bring the non linearity in the equation.
 If the activation functions are not present or if the linear activation function is used then the model will learn the same thing in each layer(basically an output of the linear equation). 
@@ -75,19 +83,20 @@ Some of the most commonly used activation functions are.
 ![Derivative Formula](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/derivative_formula.png)
 
 
-
-
-
+![Logistic Regression serivatives](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/logistic%20regression%20derivative.png)
 
 
 One iteration of Gradient descent is mentioned below.
 
+![forward and backward functions](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/forward%20and%20back%20propagation.png)
 
 
+![Back Propagation](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/back%20propagation.png)
 
 
 
 ## 7. Bias/ Variance:
+
 Bias - The model fits the training data poorly and produces the similar results in the test data. 
 Bias oversimplifies the model because it pays very little attention to training data.
 High bias means underfitting the model. 
@@ -104,7 +113,7 @@ Bias Variance tradeoff:
  
 In the image below, the red ball is the target. Any hit close to it is considered as low bias data points. If each subsequent hit is close to the previous hit is considered as low variance cases.
 
-
+![Bias varience tradeoff](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/bias%20varience.png)
 
 
 How to correct Bias-Variance Error
@@ -116,15 +125,15 @@ Get more training data when you have high variance
 In deep learning if there is a hgh bias create a bigger network and if there is high variance then increase the amount of data or perform regularization. 
 
 
-
-
-
+![Bias Varience example](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/bias%20varience%20example.png)
 
 
 ## 8. SVM:
-	In the support vector machine (SVM), cost (c) parameter decides bias-variance. A large C gives you low bias and high variance. Low bias because you penalize the cost of misclassification a lot. Large C makes the cost of misclassification high, thus forcing the algorithm to explain the input data stricter and potentially overfit. A small C gives you higher bias and lower variance. Small C makes the cost of misclassification low, thus allowing more of them for the sake of wider "cushion".
+
+In the support vector machine (SVM), cost (c) parameter decides bias-variance. A large C gives you low bias and high variance. Low bias because you penalize the cost of misclassification a lot. Large C makes the cost of misclassification high, thus forcing the algorithm to explain the input data stricter and potentially overfit. A small C gives you higher bias and lower variance. Small C makes the cost of misclassification low, thus allowing more of them for the sake of wider "cushion".
 
 ## 9. Regularization:
+
 Adding Regularization techniques will avoid variance/overfitting problems.
 
 L2 Regularizer:
@@ -133,7 +142,7 @@ It penalizes the weights and makes it smaller(near to zero) which ultimately mak
 In backpropagation the parameters(W & B) will be updated based on the regularizer(L1 & L2) added to the previous derivative.
 Below is the example for L2 Regularizer.
 
-
+![L2 Regularizer](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/L2%20regularizer.png)
 
 
 Dropout:
@@ -148,120 +157,127 @@ Data augmentation will help increase the training set and help the model to redu
 Early Stopping:
 With early stopping when there is not much improvement in the accuracy in the next subsequent iterations then you can stop training.(Mid size W).
 
-Intuition for early stopping is to see the point where the loss of the training set is decreasing while the loss of the validation set is increasing. We apply early stopping of training at this point, which means the weights will be in the mid range and will not let the weights grow larger to overfit the model
-.
+Intuition for early stopping is to see the point where the loss of the training set is decreasing while the loss of the validation set is increasing. We apply early stopping of training at this point, which means the weights will be in the mid range and will not let the weights grow larger to overfit the model.
+
+![Early Stopping](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/early%20stopping.png)
 
 
 
 ## 10. Normalization:
+
 Normalization is applied on the features so that the model becomes computationally faster to find the global minima or converges faster. 
 The unnormalized data will take much longer steps to converge.
 
-Below is the formula for continuous variables.
-
-
-
+![Normalization](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/normalization.png)
 
 
 ## 11. Vanishing/ Exploding gradients:
-Below 2 types.
 
-Vanishing Gradient:
+**Vanishing Gradient:**
 Due to very small weights, the first order derivative will become smaller in the subsequent layer and thus causing the derivative to become almost zero in the deep network which will in turn reflect the new parameter(weights or bias) to be almost identical to the old one.
 
-Exploding Gradient:
+**Exploding Gradient:**
 Due to large weights, the first order derivative will be large in number and in the subsequent weight updation process the weights will vary a lot with respect to  the previous one and gradient will never converge to the global minimum. 
 
-
-
-
-
-
-
-
-
-
-
+![Exploding Gradient](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/exploding%20gradient.png)
 
 
 ## 12. Weights Initialization:
-Usually in Tensorflow weights are initialized for dense layer is “glorot_uniform”(kernel initializer parameter)
+
+Usually in Tensorflow weights are initialized for dense layer is “glorot_uniform”(kernel initializer parameter) which is a random weights initializer for a given dense layer.
+
+![Weights Init](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/weights%20initialization.png)
 
 
 ## 13. Mini-Batch Gradient Descent:
-Splitting training data into multiple batches so that each step of a gradient descent will be performed first on the mini batch rather than the entire training examples.
-It is faster learning
-It uses only limited mini batch memory allocation for the training set rather than allocating memory for the entire training set.
-It shows the convergence towards loss with oscillations for each batch but gives clear idea on the direction it is moving towards after the entire mini batches iteration.
 
-Stochastic Gradient Descent:
+Splitting training data into multiple batches so that each step of a gradient descent will be performed first on the mini batch rather than the entire training examples.
+* It is faster learning
+* It uses only limited mini batch memory allocation for the training set rather than allocating memory for the entire training set.
+* It shows the convergence towards loss with oscillations for each batch but gives clear idea on the direction it is moving towards after the entire mini batches iteration.
+
+**Stochastic Gradient Descent:**
 When the batch size= 1 then it is called stochastic gradient descent, which means for 1000 training examples it will iterate 1000 times and calculate gradient descent every time.
 
-Disadvantages:
+**Disadvantages:**
 It is slower since it won’t make use of vectorization for mini-batch.
 It never converges, rather it will take a long route towards minima and oscillate near global minima.
 	
 
+**Choosing mini-batch size:**
+![Batch grad descent](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/batch%20grad%20descent.png)
 
-Choosing mini-batch size:
 
+![Mini Batch size](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/mini%20batch%20size.png)
 
 ## 14. Gradient Descent with momentum:
 
+![Gradient Descent with momentum](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/gradient%20descent%20with%20momemntum.png)
 
-
+![Gradient Descent example](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/gradient%20descent%20example.png)
 
 
 
 ## 15. RMSProp:
 
+![RMS Prop](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/rms%20prop.png)
 
 
 ## 16. Adam(Adaptive moment estimation):
+
 This is the combination of gradient descent with momentum and RMSprop.
 
-
+![Adam Optimization](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/adam%20optimization.png)
 
 ## 17. Learning Rate Decay:
+
 With the constant learning rate it is most unlikely to converge to a global minimum, rather it just oscillates near a global minimum.
 With the use of learning rate decay, learning rate will reduce over iteration and hence Gradient descent will take much smaller steps in the later stages while it reaches a global minimum.
 It is usually faster to converge since it takes bigger steps at the start and steps will become smaller at the later stage.
 
 
-
-
 ## 18. Local Optima problem:
+
 With more features, all the dimensions aligning in the same direction as a minimum point is highly unlikely. What we face is a saddle point where few of the dimensions align in a particular direction.
+
+![Local Optima](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/local%20optima.png)
+
 
 
 Problem of plateaus - due to gradients being close to zero for a long time, GD takes small steps towards minimum.
 -Use Adam/ RMSProp/ GD with momentum to speed up training and solve the problem of plateaus.
 
+![Plateaus](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/plateaus.png)
+
 ## 19. Hyperparameter tuning:
 
-Try random values rather than grid search to find parameters.
-We can use the course to find methods to search for parameters. I.e. if we find good results of parameters in a cluster then we zoom in on the cluster and do extensive random search.
- Scale of the parameters should be in range such that resources are utilized equally.
-Use logarithmic scale for hyperparameters like learning rate. 
+* Try random values rather than grid search to find parameters.
+* We can use the course to find methods to search for parameters. I.e. if we find good results of parameters in a cluster then we zoom in on the cluster and do extensive random search.
+* Scale of the parameters should be in range such that resources are utilized equally.
+* Use logarithmic scale for hyperparameters like learning rate. 
+
 
 ## 20. Batch Normalization:
-	Just like normalizing input values we can normalize the Z values coming from a layer which is called batch normalization. Z value is normalized by using the below equation.
 
+Just like normalizing input values we can normalize the Z values coming from a layer which is called batch normalization. Z value is normalized by using the below equation.
 
+![Batch Norm](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/batch%20norm.png)
 
+![Batch Norm Algo](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/batch%20norm%20algo.png)
 
-
-
+![Batch Norm Algo 1](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/batch%20norm%20algo%202.png)
 
 ## 21. Batch Norm Vs Regularization
 
-
+![Batch Norm as regularizer](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/batch%20norm%20as%20regularization.png)
 
 
 ## 22. Orthogonalization( Way to fine tune model at different stages):
+![Orthogonolization](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/orthogonolization.png)
 
 
 ## 23. Evaluation Metrics:
+
 Single number evaluation metrics:
 Rather than using separate  evaluation metrics like precision or recall, it is better to use combined metrics to generate a single number evaluation metrics like F1 score or Average. 
 
