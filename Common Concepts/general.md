@@ -265,7 +265,8 @@ Use logarithmic scale for hyperparameters like learning rate.
 Single number evaluation metrics:
 Rather than using separate  evaluation metrics like precision or recall, it is better to use combined metrics to generate a single number evaluation metrics like F1 score or Average. 
 
-F1 score = 2 / ((1/p)+(1/r)) - Harmonic mean
+$$F1 \text{ score} = \frac{2}{\left(\frac{1}{p} + \frac{1}{r}\right)}$$
+ - Harmonic mean
 Accuracy vs running time:
 	We can consider an optimizing metric and a satisficing metric which can help get a combined metric for evaluation.
 Ex :- If we have a cat classifier and we have optimizing metric as Accuracy and running time as Satisficing metric, then we can tune for optimizing the accuracy given the threshold of the running time does not cross 100 ms.
