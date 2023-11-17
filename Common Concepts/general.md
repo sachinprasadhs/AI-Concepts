@@ -1,4 +1,40 @@
-## 1.Sigmoid vs Relu:
+## Activation Functions: 
+
+![Activation Functions](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/activation%20functions.png)
+
+Activation functions are used to bring the non linearity in the equation.
+If the activation functions are not present or if the linear activation function is used then the model will learn the same thing in each layer(basically an output of the linear equation). 
+
+Composition of linear function is linear equation.
+
+By having a non-linear activation function, basically it decides how much of the weighted sum of that particular node is carried forward in a layer of the network.
+Some of the most commonly used activation functions are. 
+
+**`Sigmoid (0,1)`** : <br> 
+Mostly used in the output layer for binary classification.  <br>`Derivative`: `a(1-a)  range[0-0.25]`
+
+
+**`Tanh (-1,1)`** : <br>
+mMostly used in hidden layers but computation is slower compared to relu but superior to sigmoid since it centers your data since mean is closer to zero as it includes both positive and negative values which helps in easier learning of weights in the next layer.
+ <br>`Derivative`:  `1 - a2 range(0 to 1)`
+
+
+**`Relu max(0,Z)`** : <br>
+Mostly used in hidden layers and computation is faster, it makes all the negative values to zero and also helps to overcome the vanishing gradient problem.
+ <br>`Derivative`:  `0 if z < 0, 1 if z>= 0`
+
+
+**`Leaky Relu (0.01Z, Z)`** : <br>
+Adds an alpha value when the weights are negative which helps in retaining the derivative instead of making it to 0.
+ <br>`Derivative`:  `0.01 if z < 0, 1 if z>= 0`
+
+
+**`Softmax`:**
+The softmax is the multiclass counterpart of the sigmoid. If you have $\(N\)$ mutually exclusive events, and their logits are given by $\(Y_j\)$, then softmax $\(\sigma(Y_j)\)$ provides the probability of the $\(j\)-th$ event. Mathematically, the softmax is given by:
+
+$$\sigma(Y)j = \frac{e^{Y_j}}{\sum{i=1}^{N} e^{Y_i}}$$
+
+## Sigmoid vs Relu:
 
 ![Sigmoid vs Relu](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/Relu%20vs%20Sigmoid.png)
 
@@ -15,7 +51,7 @@ Relu helps in solving the above problem.
 Reason-  Relu function max(0, Z) . Which means gradients for negative weights are zero and for positive weights the gradients are always 1   to help faster training. I.e weight updation.
 
 
-## 2.Slope and Gradient:
+## Slope and Gradient:
 
 The term “slope” is generally applicable when only 2 variables are in consideration (height divided by width). The slope then is the actual tangent or the derivative to the curve of the function that connects the 2 variables. It's a measure of the rate of change of a function f(x) with respect to the x .
 
@@ -53,30 +89,6 @@ Weights and bias will be updated with the new weights calculated by subtracting 
 ![Gradient Descent](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/gradient%20descent.png)
 
 
-## 5. Activation Functions: 
-
-![Activation Functions](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/activation%20functions.png)
-
-Activation functions are used to bring the non linearity in the equation.
-If the activation functions are not present or if the linear activation function is used then the model will learn the same thing in each layer(basically an output of the linear equation). 
-
-Composition of linear function is linear equation.
-
-By having a non-linear activation function, basically it decides how much of the weighted sum of that particular node is carried forward in a layer of the network.
-Some of the most commonly used activation functions are. 
-`Sigmoid (0,1)` : Mostly used in the output layer for binary classification.
-`Derivative`: `a(1-a)  range[0-0.25]`
-
-`Tanh (-1,1)` : mMostly used in hidden layers but computation is slower compared to relu but superior to sigmoid since it centers your data since mean is closer to zero as it includes both positive and negative values which helps in easier learning of weights in the next layer.
-`Derivative`:  `1 - a2 range(0 to 1)`
-
-`Relu max(0,Z)` : Mostly used in hidden layers and computation is faster, it makes all the negative values to zero and also helps to overcome the vanishing gradient problem.
-`Derivative`:  `0 if z < 0, 1 if z>= 0`
-
-`Leaky Relu (0.01Z, Z)` : Adds an alpha value when the weights are negative which helps in retaining the derivative instead of making it to 0.
-`Derivative`:  `0.01 if z < 0, 1 if z>= 0`
-
-
 
 ## 6. Formulas for derivatives
 
@@ -97,7 +109,7 @@ One iteration of Gradient descent is mentioned below.
 
 ## 7. Bias/ Variance:
 
-Bias - The model fits the training data poorly and produces the similar results in the test data. 
+**Bias:** <br>The model fits the training data poorly and produces the similar results in the test data. 
 Bias oversimplifies the model because it pays very little attention to training data.
 High bias means underfitting the model. 
 
@@ -106,22 +118,21 @@ High bias means linear regression applied to quadratic relationships.
 Low bias means second degree polynomials applied to quadratic data.
 
 
-Variance:The model fits well on training data but can not generalize the pattern well which results in overfitting. It means they don’t fit well on data outside training.
+**Variance:**  <br> The model fits well on training data but can not generalize the pattern well which results in overfitting. It means they don’t fit well on data outside training.
 
 
-Bias Variance tradeoff:
- 
-In the image below, the red ball is the target. Any hit close to it is considered as low bias data points. If each subsequent hit is close to the previous hit is considered as low variance cases.
+**Bias Variance tradeoff:** <br>
+ In the image below, the red ball is the target. Any hit close to it is considered as low bias data points. If each subsequent hit is close to the previous hit is considered as low variance cases.
 
 ![Bias varience tradeoff](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/bias%20varience.png)
 
 
-How to correct Bias-Variance Error
+**How to correct Bias-Variance Error:**
 
 
-Try smaller number of Features(only important ones) when you have high variance
-Try larger number of Features or transform features when you have high bias
-Get more training data when you have high variance
+* Try smaller number of Features(only important ones) when you have high variance.
+* Try larger number of Features or transform features when you have high bias.
+* Get more training data when you have high variance. <br>
 In deep learning if there is a hgh bias create a bigger network and if there is high variance then increase the amount of data or perform regularization. 
 
 
@@ -136,7 +147,7 @@ In the support vector machine (SVM), cost (c) parameter decides bias-variance. A
 
 Adding Regularization techniques will avoid variance/overfitting problems.
 
-L2 Regularizer:
+**L2 Regularizer:**
 It penalizes the weights and makes it smaller(near to zero) which ultimately makes Z to fall in the linear region of the activation functions(like tanh).
 
 In backpropagation the parameters(W & B) will be updated based on the regularizer(L1 & L2) added to the previous derivative.
@@ -145,16 +156,16 @@ Below is the example for L2 Regularizer.
 ![L2 Regularizer](https://github.com/sachinprasadhs/AI-Concepts/blob/main/Common%20Concepts/Images/L2%20regularizer.png)
 
 
-Dropout:
+**Dropout:** <br>
 It is a technique where it randomly zeros the neuron from a selected layer based on the dropout probability value(0-1).
 
 In each iteration the dropout neuron will be selected at random which works well on a network.
 But it affects gradient descent graph (it may not be convex) since the random neurons are dropped and during backpropagation the parameter adjustment is not constant.
 
-Data Augmentation:
+**Data Augmentation:** <br>
 Data augmentation will help increase the training set and help the model to reduce variance.
 
-Early Stopping:
+**Early Stopping:** <br>
 With early stopping when there is not much improvement in the accuracy in the next subsequent iterations then you can stop training.(Mid size W).
 
 Intuition for early stopping is to see the point where the loss of the training set is decreasing while the loss of the validation set is increasing. We apply early stopping of training at this point, which means the weights will be in the mid range and will not let the weights grow larger to overfit the model.
