@@ -30,5 +30,5 @@ def input_fn():
    yield dummy_images
 
 converter.build(input_fn=input_fn)
-OUTPUT_SAVED_MODEL_DIR="./material_form_tftrt"
+OUTPUT_SAVED_MODEL_DIR="./tftrt_model."
 converter.save(output_saved_model_dir=OUTPUT_SAVED_MODEL_DIR)
