@@ -1,11 +1,14 @@
 import jax
 import optax
 import jax.numpy as jnp
+import numpy as np
 
 from typing import Any, Callable
 from flax import struct
 from flax import linen as nn
-from flax.training.train_state import TrainState
+from flax.training import train_state
+from flax.training import dynamic_scale as dynamic_scale_lib
+from flax.training import common_utils
 
 
 # hyperparameters
@@ -40,6 +43,8 @@ n = int(0.9*len(data)) # first 90% will be train, rest val
 train_data = data[:n]
 val_data = data[n:]
 
+class TrainState(train_state.TrainState):
+  dynamic_scale: dynamic_scale_lib.DynamicScale
 
 
 
@@ -145,9 +150,24 @@ class SingleHead(nn.Module):
     def __call__(self, inputs):
         config = self.config
 
-        key = nn.Dense(config.head_size, use_bias=False)(inputs)  # B, T, C
-        query = nn.Dense(config.head_size, use_bias=False)(inputs)  # B, T, C
-        value = nn.Dense(config.head_size, use_bias=False)(inputs)  # B, T, C
+        key = nn.Dense(
+            config.head_size,
+            dtype=config.dtype,
+            kernel_init=config.kernel_init,
+            bias_init=config.bias_init, 
+            use_bias=False)(inputs)  # B, T, C
+        query = nn.Dense(
+            config.head_size,
+            dtype=config.dtype,
+            kernel_init=config.kernel_init,
+            bias_init=config.bias_init,
+            use_bias=False)(inputs)  # B, T, C
+        value = nn.Dense(
+            config.head_size, 
+            dtype=config.dtype,
+            kernel_init=config.kernel_init,
+            bias_init=config.bias_init,
+            use_bias=False)(inputs)  # B, T, C
 
         wei = query @ key.transpose((0, 2, 1))  # (B, T, 16) @ (B, 16,  T) -> (B, T, T)
         tril = jnp.tril(jnp.ones((config.block_size, config.block_size)))
@@ -170,7 +190,11 @@ class MultiHeadAttention(nn.Module):
             [SingleHead(config)(inputs) for _ in range(config.num_heads)],
             axis=-1,
         )
-        x = nn.Dense(self.config.d_model)(x)
+        x = nn.Dense(
+            self.config.d_model,
+            dtype=config.dtype,
+            kernel_init=config.kernel_init,
+            bias_init=config.bias_init,)(x)
         x = nn.Dropout(
             config.dropout_rate,
             deterministic=config.deterministic
@@ -246,20 +270,44 @@ class Decoder(nn.Module):
             [DecoderBlock(config) for _ in range(config.num_layers)] + [nn.LayerNorm()]
         )(x)
 
-        lm_head_out = nn.Dense(config.vocab_size)(x)
+        lm_head_out = nn.Dense(
+            config.vocab_size,
+            dtype=config.dtype,
+            kernel_init=config.kernel_init,
+            bias_init=config.bias_init,)(x)
 
         return lm_head_out
 
 
 def create_train_state(key, config: TransformerConfig):
     decoder = Decoder(config, name="decoder_transformer")
-    params = decoder.init(key, batched_data[0])['params']
+    initial_variables = jax.jit(decoder.init)(key, batched_data[0])
     adam_opt = optax.adam(config.learning_rate, config.momentum)
+    return TrainState.create(apply_fn=decoder.apply, 
+                             params=initial_variables['params'], 
+                             dynamic_scale=None,
+                             tx=adam_opt)
 
-    return TrainState.create(apply_fn=decoder.apply, params=params, tx=adam_opt)
+
+def compute_weighted_accuracy(logits, targets):
+    if logits.ndim != targets.ndim + 1:
+        raise ValueError(
+            "Incorrect shapes. Got shape %s logits and %s targets"
+            % (str(logits.shape), str(targets.shape))
+        )
+    loss = jnp.equal(jnp.argmax(logits, axis=-1), targets)
+
+    return loss.sum()
+
+def compute_loss(logits, labels):
+    vocab_size = logits.shape[-1]
+    targets = common_utils.onehot(labels, vocab_size)
+    loss = -jnp.sum(targets * nn.log_softmax(logits), axis=-1)
+    
+    return loss.sum()
 
 def compute_metrics(*, logits, labels):
-  loss = optax.softmax_cross_entropy_with_integer_labels(logits=logits, labels=labels)
+  loss = compute_loss(logits, labels)
   accuracy = jnp.mean(jnp.argmax(logits, -1) == labels)
 
   metrics = {
@@ -269,19 +317,24 @@ def compute_metrics(*, logits, labels):
   return metrics
 
 
-@jax.jit
+# @jax.jit
 def train_step(
     config: TransformerConfig, 
-    state: TrainState , 
-    inputs, 
-    labels):
+    state: TrainState, 
+    dropout_key,
+    batch_data):
+    
+    
+    inputs, labels = batch_data
+    dropout_train_key = jax.random.fold_in(key=dropout_key, data=state.step)
     
     def loss_fn(params):
-        logits = Decoder(config).apply({'params': params}, inputs)
-        B, T, C = logits.shape
-        logits = jnp.reshape(logits, newshape=(B*T, C))
-        labels = jnp.reshape(labels, newshape=(B*T))
-        loss = optax.softmax_cross_entropy_with_integer_labels(logits, labels)
+        logits = state.apply_fn(
+            {'params': params}, 
+            inputs,
+            rngs={'dropout': dropout_train_key})
+        print(logits.shape)
+        loss = compute_loss(logits, labels)
         return loss, logits
 
     (_, logits), grads = jax.value_and_grad(loss_fn, has_aux=True)(state.params)
@@ -289,7 +342,7 @@ def train_step(
     metrics = compute_metrics(logits=logits, labels=labels)
     return state, metrics
 
-@jax.jit
+# @jax.jit
 def eval_step(
     config: TransformerConfig, 
     state: TrainState , 
@@ -318,19 +371,19 @@ data_key, params_key, dropout_key, opt_key = jax.random.split(jax.random.PRNGKey
 batched_data = get_batch(data_key, 'train')
 
 inti_keys = {'params': params_key, 'dropout': dropout_key}
-train_state = create_train_state(inti_keys, config)
+state = create_train_state(inti_keys, config)
 
 
 for iter in range(config.max_iters):
     data_key, data_subkey = jax.random.split(data_key)
-    inputs, labels = get_batch(data_key, 'train')
-    print(inputs.dtype, labels.shape)
-    train_state, metrics = train_step(config, train_state, inputs, labels)
+    batch_data = get_batch(data_key, 'train')
+    # print(inputs.dtype, labels.shape, train_state)
+    state, metrics = train_step(config, state, dropout_key, batch_data)
     
     if iter % eval_interval == 0 or iter == config.max_iters - 1:
         print(f"Step: {iter}, training loss: {metrics['loss']}, training accuracy: {metrics['accuracy']}")
         eval_inputs, eval_labels = get_batch(data_subkey, 'val')
-        val_metrics = eval_step(config, train_state, eval_inputs, eval_labels)
+        val_metrics = eval_step(config, state, eval_inputs, eval_labels)
         print(f"Step: {iter}, validation loss: {val_metrics['loss']}, validation accuracy: {val_metrics['accuracy']}")
     
     
