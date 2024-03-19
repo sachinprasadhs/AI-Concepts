@@ -8,6 +8,12 @@ from flax.training import common_utils
 from flax.training.train_state import TrainState
 
 
+# Code reference: https://github.com/karpathy/ng-video-lecture/blob/master/gpt.py
+# All the code written here is taught by Andrej Karpathy in this video: https://www.youtube.com/watch?v=kCc8FmEb1nY
+# Just to make more interesting written in JAX so that I can understand more in detail
+
+
+
 # hyperparameters
 seed = 1345
 batch_size = 64  # how many independent sequences will we process in parallel?
