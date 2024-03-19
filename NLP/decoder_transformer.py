@@ -13,7 +13,6 @@ from flax.training.train_state import TrainState
 # Just to make more interesting written in JAX so that I can understand more in detail
 
 
-
 # hyperparameters
 seed = 1345
 batch_size = 64  # how many independent sequences will we process in parallel?
@@ -69,7 +68,16 @@ def get_batch(key, split):
 
 class Head(nn.Module):
     head_size: int
-    """ one head of self-attention """
+    """A single head for self-attention in a Transformer block.
+
+      This module performs the core computation of a single self-attention head,
+      including key, query, and value projection, attention score calculation,
+      masking for causal relationships, softmax normalization, weighted value
+      aggregation, and dropout for regularization.
+
+      Args:
+          head_size: The dimension of each head's output.
+    """
 
     def setup(self):
         self.key = nn.Dense(
@@ -115,7 +123,16 @@ class Head(nn.Module):
 
 
 class MultiHeadAttention(nn.Module):
-    """multiple heads of self-attention in parallel"""
+    """Multiple heads of self-attention in parallel for a Transformer block.
+
+    This module combines multiple `Head` instances to create a parallel
+    self-attention layer. It performs separate attention calculations for each
+    head and concatenates the results.
+
+    Args:
+        num_heads: The number of parallel heads to use.
+        head_size: The dimension of each head's output.
+    """
 
     num_heads: int
     head_size: int
@@ -137,7 +154,14 @@ class MultiHeadAttention(nn.Module):
 
 
 class FeedFoward(nn.Module):
-    """a simple linear layer followed by a non-linearity"""
+    """A simple feed-forward network for a Transformer block.
+
+    This module consists of two linear layers with a non-linearity (ReLU) in
+    between, providing a non-linear transformation of the input.
+
+    Args:
+        n_embed: The embedding dimension of the input and output.
+    """
 
     n_embed: int
 
@@ -165,7 +189,18 @@ class FeedFoward(nn.Module):
 
 
 class Block(nn.Module):
-    """Transformer block: communication followed by computation"""
+    """A single Transformer block with self-attention and feed-forward layers.
+
+    This module performs self-attention using `MultiHeadAttention`, followed by
+    a residual connection, Layer normalization, and a feed-forward network
+    with residual connection and Layer normalization.
+
+    Transformer block: communication followed by computation
+
+    Args:
+        n_embed: The embedding dimension of the input and output.
+        n_head: The number of parallel heads to use in the `MultiHeadAttention` layer.
+    """
 
     n_embed: int
     n_head: int
@@ -222,6 +257,28 @@ class GPTLanguageModel(nn.Module):
 
 @functools.partial(jax.jit, static_argnames=["training"])
 def train_step(state, batch, training, dropout_rng=None):
+    """Performs a single training step for the GPT language model.
+
+    This function takes a `TrainState`, a batch of data (inputs and targets),
+    a training flag, and an optional dropout random number generator key.
+    It computes the loss using a softmax cross-entropy loss function, calculates
+    gradients using `jax.value_and_grad`, updates the model parameters using
+    the optimizer, and returns the updated loss and `TrainState`.
+
+    Args:
+        state: The `TrainState` object containing the current model parameters and
+            optimizer state.
+        batch: A tuple of two JAX arrays, where the first element is the batch
+            of input token indices and the second element is the batch of target
+            token indices.
+        training: A boolean flag indicating whether to apply dropout during training.
+        dropout_rng: An optional JAX random number generator key for dropout.
+
+    Returns:
+        A tuple containing the scalar loss value for the current batch and the
+        updated `TrainState` object.
+    """
+
     inputs, targets = batch
     dropout_train_key = jax.random.fold_in(key=dropout_rng, data=state.step)
 
