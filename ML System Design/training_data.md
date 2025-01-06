@@ -119,4 +119,24 @@ def reservoir_sample(stream, k):
 
 ### Class Imbalance
 
+Class imbalance typically refers to a problem in classification tasks where there is a substantial difference in the number of samples in each class of the training data.
 
+Class imbalance can also happen with regression tasks where the labels are continous. Consider the task of estimating health-care bills. Health-care bills are highly skewed - the median bill is low, but the $95^{th}$ percentile bill is astronomical. When predicting hospital bills, it might be more important to predict accurately the bills at $95^{th}$ percentile.
+
+#### Challenges of Class imbalance
+
+* ML, especially works well the data distribution is balanced and usually not so well when the classes are heavily imbalanced.
+
+* The first reason is that class imbalance often means there's insufficient signal for your model to learn to detect the minority classes.
+
+* The second reason is that class imbalance makes it easier for your model to get stuck in nonoptimal solution by exploiting a simpel heuristic instead of learning anything useful about the underlying pattern in the data.
+
+* The third reason is that class imbalance leads to asymmetric costs of error - the cost of a wrong prediction on a sample of the rare class might be much higher than a wrong prediction on a sample of the majority class.
+
+### Handling Class Imbalance
+
+`Japkowicz(Author)` showed that sensitivity to imbalance increases with the complexity of the problem and that non complex, linearly separable problems are unaffected by all levels of class imbalance. Class imbalance in binary classification is a much easier problem than class imbalance in multiclass classification problems.
+
+#### Using the righ evaluation metrics
+
+* 
