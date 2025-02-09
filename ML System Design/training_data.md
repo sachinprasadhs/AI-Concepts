@@ -139,4 +139,40 @@ Class imbalance can also happen with regression tasks where the labels are conti
 
 #### Using the righ evaluation metrics
 
-* 
+* Precision, Recall and F1, for binary tasks are calculated using the count of true positives, true negatives, false positives and false negatives.
+
+* F1, preicison and recall are asymmetric metrics, which means that their values change depending on which class is considered the positive class.
+
+* We can plot true positive rate (also known as recall) while decreasing the false positive rate (als known as the probability of flase alarm), and vice versa. This plot is known as the ROC curve.
+
+* When your model is prefect the recall is `1.0` and the curve is just a line at the top.
+
+<p align="center">
+    <img src="roc.png" alt="Description" width="400">
+</p>
+
+* Like F1 and recall, the ROC curve focuses only on the positive class and doesn't show how well your model does on the negative class. Daivs and Goadric authors suggested we should plot precision against recall instead, in what they termed the Precision Recall Curve. They argued this curve gives more informative picture of and algorithm's performance on tasks with heavy class imbalacne.
+
+#### Data-level methods: 
+##### Resampling
+
+* Use undersampling or oversampling
+
+* Tomek Links: A popular method of undersampling low-dimensional data that was developed back in 1976 is `Tomek links`. With this technique, you find pairs of samples from opposite classes that are close in proximity and remove the sample of the majority class in each pair. While this makes the decision boundary more clear and arguably helps models learn the boundary better, it may make the model less robust because the model doesn't get to learn from subtleties of the true decision boundary.
+
+* SMOTE: A popular method of oversampling low-dimensional data is SMOTE(synthetic minority oversampling technique). It synthesizes novel sample of the minority classes through sampling convex(linear meaning) combination of existing data points within the minority class.
+
+
+* Undersampling runs risk of losing important data from removing data. Oversampling runs the risk of overfitting on training, data especially if the added copies of the minority class are replicas of exisiting data.
+
+##### Algorithm-level methods
+If data-level methods mitigate the challenge of class imbalancy by altering the distribution of your training data, alorithm-level methods keep the training data distribution intact but alter the algorithm to make it more robust to class imbalance.
+
+* **Cost-sensitive learning**: The method started by using a cost matrix to specify $C_{ij}$: the cost if class $i$ is classified as class $j$. If $i=j$, its correct classification, and the cost is usually $0$.
+* **Class-balanced loss**: We make the weight of each class inversely proportional to the number of samples in that class, so that the rarer classes have higher weights.
+$$W_{i} = \frac{N}{\text{number of samples of class i}}$$
+* **Focal Loss**: Focal Loss is a modified version of cross-entropy loss designed to handle class imbalance by down-weighting the loss for well-classified examples and focusing more on hard-to-classify ones.
+$$FL(p_{t}) = -\alpha(1-p_{t})^\gamma \log(p_{t})$$
+
+* when $p_{t}$ is high -> $(1-p_{t})^\gamma$ is small, reducing its contribution to the loss.
+* when $p_{t}$ is low -> $(1-p_{t})^\gamma$ is large, increasing its contribution.
